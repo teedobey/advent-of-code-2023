@@ -10,33 +10,36 @@ def main():
     for y, line in enumerate(chars):
         for x, ch in enumerate(line):
             if ch == "*":
-                numbers += getadjacent(x, y, -1, chars)
-                numbers += getadjacent(x, y, 0, chars)
-                numbers += getadjacent(x, y, 1, chars)
+                numbers += getadjacent(x, y-1, chars)
+                numbers += getadjacent(x, y, chars)
+                numbers += getadjacent(x, y+1, chars)
                 if len(numbers) == 2:
                     sum += numbers[0] * numbers[1]
                 numbers = []
     print(sum)                
 
-def getadjacent(target_x, y, y_delta, chars):
+def getadjacent(target_x, y, chars):
     res = []
-    if y + y_delta < 0 or y+ y_delta >= len(chars):
+    if y < 0 or y >= len(chars):
         return []
-    target_row = y + y_delta
     curfigure = 0
     start_x = 0
-    for x, ch in enumerate(chars[target_row]):
+    end_x = 0
+    for x, ch in enumerate(chars[y]):
         if ch.isdigit():
             if curfigure == 0:
                 start_x = x
             curfigure = curfigure * 10 + int(ch)
         else:
+            end_x = x-1
             if curfigure != 0:            
-                if (target_x >= x-2 and target_x <= x) or (start_x >= target_x-1 and start_x <= target_x+1):
+                # x-1 is the last coordinate with digit
+                if (start_x >= target_x-1 and start_x <= target_x+1) or (end_x >= target_x-1 and end_x <= target_x+1):
                     res.append(curfigure)
                 curfigure = 0
     if curfigure != 0:
-        if (start_x >= target_x-1 and start_x <= target_x+1):
+        end_x = len(chars[y])-1
+        if (start_x >= target_x-1 and start_x <= target_x+1) or (end_x >= target_x-1 and end_x <= target_x+1):
             res.append(curfigure)
     return res
 
