@@ -80,8 +80,8 @@ def main():
             east = map[node[0][0]][node[0][1]+1]
             if east in east_connections[pipe_type]:
                 queue.append(((node[0][0], node[0][1] + 1), distance + 1))
-    print(max_distance)
-    print(len(visited))
+    print(F"Max distance = {max_distance}")
+    print(F"Pipes visited: {len(visited)}")
 
     loop_x_counts = copy.deepcopy(map)
     loop_y_counts = copy.deepcopy(map)
@@ -126,33 +126,13 @@ def main():
                     elif map[i][j] == "L" and first_turn == "7":
                         loop_y_counts[i][j] += 1
                         first_turn = ""
-
-    for y in range(0, len(loop_y_counts)):
-        output = ""
-        for x in range(0, len(loop_y_counts[y])):
-            output += str(loop_y_counts[y][x])
-        print(output)
-    print()
-    for y in range(0, len(loop_x_counts)):
-        output = ""
-        for x in range(0, len(loop_x_counts[y])):
-            output += str(loop_x_counts[y][x])
-        print(output)
-
     area = 0
     for i in range(0, len(map)):
         for j in range(0, len(map[i])):
             if not (i, j) in visited:
                 if loop_y_counts[i][j] % 2 == 1 and loop_x_counts[i][j] % 2 == 1:
-                    print(str(i) + ", " + str(j) + " in a loop")
                     area += 1
-    print(area)
-
-def connected_y(north_type, south_type):
-    return north_type in north_connections[south_type]
-
-def connected_x(west_type, east_type):
-    return west_type in west_connections[east_type]
+    print(F"Area inside the main loop: {area}")
 
 def replace_s(map, i, j):
     north_ok = False
