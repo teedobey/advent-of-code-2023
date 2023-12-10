@@ -3,41 +3,50 @@ import fileinput
 import parse
 import copy
 
-north_connections = {"|": ["|", "F", "7"], 
-                     "F": [],
-                     "7": [],
-                     "J": ["|", "F", "7"],
-                     "." : [],
-                     "-": [],
-                     "L": ["|", "F", "7"],
-                     "S": ["|", "F", "7"]}
+north_connections = {
+    "|": ["|", "F", "7"],
+    "F": [],
+    "7": [],
+    "J": ["|", "F", "7"],
+    ".": [],
+    "-": [],
+    "L": ["|", "F", "7"],
+    "S": ["|", "F", "7"],
+}
 
-south_connections = {"|": ["|", "L", "J"],
-                     "F": ["|", "L", "J"],
-                     "7": ["|", "L", "J"],
-                     "S": ["|", "L", "J"],
-                     "J": [],
-                     "L": [],
-                     ".": [],
-                     "-": []}
+south_connections = {
+    "|": ["|", "L", "J"],
+    "F": ["|", "L", "J"],
+    "7": ["|", "L", "J"],
+    "S": ["|", "L", "J"],
+    "J": [],
+    "L": [],
+    ".": [],
+    "-": [],
+}
 
-east_connections = {"|": [],
-                    "F": ["-", "7", "J"],
-                    "S": ["-", "7", "J"],
-                    "7": [],
-                    "L": ["-", "7", "J"],
-                    "-": ["-", "7", "J"],
-                    "J": [],
-                    ".": []}
+east_connections = {
+    "|": [],
+    "F": ["-", "7", "J"],
+    "S": ["-", "7", "J"],
+    "7": [],
+    "L": ["-", "7", "J"],
+    "-": ["-", "7", "J"],
+    "J": [],
+    ".": [],
+}
 
-west_connections = {"|": [],
-                    "F": [],
-                    "L": [],
-                    "7": ["-", "F", "L"],
-                    "J": ["-", "F", "L"],
-                    "S": ["-", "F", "L"],
-                    ".": [],
-                    "-": ["-", "F", "L"]}
+west_connections = {
+    "|": [],
+    "F": [],
+    "L": [],
+    "7": ["-", "F", "L"],
+    "J": ["-", "F", "L"],
+    "S": ["-", "F", "L"],
+    ".": [],
+    "-": ["-", "F", "L"],
+}
+
 
 def main():
     args = parser.parse_args()
@@ -67,23 +76,23 @@ def main():
         pipe_type = map[node[0][0]][node[0][1]]
         distance = node[1]
         if node[0][0] > 0:
-            north = map[node[0][0]-1][node[0][1]]
+            north = map[node[0][0] - 1][node[0][1]]
             if north in north_connections[pipe_type]:
-                queue.append(((node[0][0]-1, node[0][1]), distance + 1))
+                queue.append(((node[0][0] - 1, node[0][1]), distance + 1))
         if node[0][0] < len(map) - 1:
-            south = map[node[0][0]+1][node[0][1]]
+            south = map[node[0][0] + 1][node[0][1]]
             if south in south_connections[pipe_type]:
-                queue.append(((node[0][0]+1, node[0][1]), distance + 1))
+                queue.append(((node[0][0] + 1, node[0][1]), distance + 1))
         if node[0][1] > 0:
-            west = map[node[0][0]][node[0][1]-1]
+            west = map[node[0][0]][node[0][1] - 1]
             if west in west_connections[pipe_type]:
                 queue.append(((node[0][0], node[0][1] - 1), distance + 1))
         if node[0][1] < len(map[node[0][0]]) - 1:
-            east = map[node[0][0]][node[0][1]+1]
+            east = map[node[0][0]][node[0][1] + 1]
             if east in east_connections[pipe_type]:
                 queue.append(((node[0][0], node[0][1] + 1), distance + 1))
-    print(F"Max distance = {max_distance}")
-    print(F"Pipes visited: {len(visited)}")
+    print(f"Max distance = {max_distance}")
+    print(f"Pipes visited: {len(visited)}")
 
     loop_x_counts = copy.deepcopy(map)
     loop_y_counts = copy.deepcopy(map)
@@ -91,10 +100,10 @@ def main():
     first_turn = ""
     for i in range(0, len(map)):
         for j in range(0, len(map[i])):
-            loop_x_counts[i][j] = 0 if j == 0 else loop_x_counts[i][j-1]
+            loop_x_counts[i][j] = 0 if j == 0 else loop_x_counts[i][j - 1]
             if (i, j) in visited:
                 if map[i][j] == "|":
-                    loop_x_counts[i][j] +=1
+                    loop_x_counts[i][j] += 1
                     first_turn = ""
                 elif map[i][j] == "-":
                     pass
@@ -106,16 +115,16 @@ def main():
                         first_turn = ""
                     elif map[i][j] == "7" and first_turn == "L":
                         loop_x_counts[i][j] += 1
-                        first_turn = ""                                      
+                        first_turn = ""
 
     # populate loop_y_counts
     first_turn = ""
     for j in range(0, len(map[0])):
         for i in range(0, len(map)):
-            loop_y_counts[i][j] = 0 if i == 0 else loop_y_counts[i-1][j]
+            loop_y_counts[i][j] = 0 if i == 0 else loop_y_counts[i - 1][j]
             if (i, j) in visited:
                 if map[i][j] == "-":
-                    loop_y_counts[i][j] +=1
+                    loop_y_counts[i][j] += 1
                     first_turn = ""
                 elif map[i][j] == "|":
                     pass
@@ -134,7 +143,7 @@ def main():
             if not (i, j) in visited:
                 if loop_y_counts[i][j] % 2 == 1 and loop_x_counts[i][j] % 2 == 1:
                     area += 1
-    print(F"Area inside the main loop: {area}")
+    print(f"Area inside the main loop: {area}")
     if args.html != "":
         visualize(map, visited, loop_x_counts, loop_y_counts, args.html)
 
@@ -145,13 +154,13 @@ def replace_s(map, i, j):
     east_ok = False
     west_ok = False
     if i > 0:
-        north_ok = map[i-1][j] in north_connections["S"]
+        north_ok = map[i - 1][j] in north_connections["S"]
     if i < len(map) - 1:
-        south_ok = map[i+1][j] in south_connections["S"]
+        south_ok = map[i + 1][j] in south_connections["S"]
     if j > 0:
-        west_ok = map[i][j-1] in west_connections["S"]
+        west_ok = map[i][j - 1] in west_connections["S"]
     if j < len(map[i]) - 1:
-        east_ok = map[i][j+1] in east_connections["S"]
+        east_ok = map[i][j + 1] in east_connections["S"]
     if north_ok and south_ok:
         return "|"
     if north_ok and east_ok:
@@ -174,20 +183,29 @@ unicode_mapping = {
     "J": "&#9499;",
     "|": "&#9475;",
     "-": "&#9473;",
-    ".": "&nbsp;"
+    ".": "&nbsp;",
 }
+
 
 def visualize(map, visited, loop_x_counts, loop_y_counts, output_html):
     with open(output_html, "w") as output:
         output.write("<html><head><title>visualization</title></head>\n")
-        output.write("<body style=\"background-color:black; color:white\">\n")
-        output.write("<span style=\"font-family:monospace\">\n")
+        output.write('<body style="background-color:black; color:white">\n')
+        output.write('<span style="font-family:monospace">\n')
         for i in range(0, len(map)):
             for j in range(0, len(map[i])):
                 if (i, j) in visited:
-                    output.write("<span style=\"color:red; background-color:#220000;\">" + unicode_mapping[map[i][j]] + "</span>")
+                    output.write(
+                        '<span style="color:red; background-color:#220000;">'
+                        + unicode_mapping[map[i][j]]
+                        + "</span>"
+                    )
                 elif loop_x_counts[i][j] % 2 == 1 and loop_y_counts[i][j] % 2 == 1:
-                    output.write("<span style=\"color:yellow; background-color:#00AAAA;\">" + unicode_mapping[map[i][j]] + "</span>")
+                    output.write(
+                        '<span style="color:yellow; background-color:#00AAAA;">'
+                        + unicode_mapping[map[i][j]]
+                        + "</span>"
+                    )
                 else:
                     output.write(unicode_mapping[map[i][j]])
             output.write("<br/>\n")
@@ -195,8 +213,9 @@ def visualize(map, visited, loop_x_counts, loop_y_counts, output_html):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description='Solve the Advent of Code 2013 day 10 puzzle. (2)')
+    parser = argparse.ArgumentParser(
+        description="Solve the Advent of Code 2013 day 10 puzzle. (2)"
+    )
     parser.add_argument("input", help="The input file")
-    parser.add_argument('--html', help="Output file for html visualization", default="")
+    parser.add_argument("--html", help="Output file for html visualization", default="")
     main()
-
