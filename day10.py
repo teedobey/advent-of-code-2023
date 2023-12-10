@@ -1,3 +1,4 @@
+import argparse
 import fileinput
 import parse
 
@@ -38,8 +39,9 @@ west_connections = {"|": [],
                     "-": ["-", "F", "L"]}
 
 def main():
+    args = parser.parse_args()
     sum = 0
-    lines = iter(fileinput.input())
+    lines = iter(fileinput.input(files=(args.input)))
     map = []
     edges = {}
     start = (-1, -1)
@@ -78,7 +80,38 @@ def main():
             if east in east_connections[pipe_type]:
                 queue.append(((node[0][0], node[0][1] + 1), distance + 1))
     print(max_distance)
+    if args.html != "":
+        visualize(map, visited, args.html)
+
+unicode_mapping = {
+    "F": "&#9487;",
+    "7": "&#9491;",
+    "L": "&#9495;",
+    "J": "&#9499;",
+    "|": "&#9475;",
+    "-": "&#9473;",
+    ".": "&nbsp;",
+    "S": "S"
+}
+
+def visualize(map, visited, output_html):
+    with open(output_html, "w") as output:    
+        output.write("<html><head><title>visualization</title></head>\n")
+        output.write("<body style=\"background-color:black; color:white\">\n")
+        output.write("<span style=\"font-family:monospace\">\n")
+        for i in range(0, len(map)):
+            for j in range(0, len(map[i])):
+                if (i, j) in visited:
+                    output.write("<span style=\"color:red;\">" + unicode_mapping[map[i][j]] + "</span>")
+                else:
+                    output.write(unicode_mapping[map[i][j]])
+            output.write("<br/>\n")
+        output.write("</span></body></html>\n")
+
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description='Solve the Advent of Code 2013 day 10 puzzle. (2)')
+    parser.add_argument("input", help="The input file")
+    parser.add_argument('--html', help="Output file for html visualization", default="")
     main()
 

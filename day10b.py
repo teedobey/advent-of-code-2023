@@ -1,3 +1,4 @@
+import argparse
 import fileinput
 import parse
 import copy
@@ -39,8 +40,9 @@ west_connections = {"|": [],
                     "-": ["-", "F", "L"]}
 
 def main():
+    args = parser.parse_args()
     sum = 0
-    lines = iter(fileinput.input())
+    lines = iter(fileinput.input(files=(args.input)))
     map = []
     edges = {}
     start = (-1, -1)
@@ -133,6 +135,9 @@ def main():
                 if loop_y_counts[i][j] % 2 == 1 and loop_x_counts[i][j] % 2 == 1:
                     area += 1
     print(F"Area inside the main loop: {area}")
+    if args.html != "":
+        visualize(map, visited, loop_x_counts, loop_y_counts, args.html)
+
 
 def replace_s(map, i, j):
     north_ok = False
@@ -162,6 +167,36 @@ def replace_s(map, i, j):
     raise ValueError("Unexpected state when replacing S " + str(i) + ", " + str(j))
 
 
+unicode_mapping = {
+    "F": "&#9487;",
+    "7": "&#9491;",
+    "L": "&#9495;",
+    "J": "&#9499;",
+    "|": "&#9475;",
+    "-": "&#9473;",
+    ".": "&nbsp;"
+}
+
+def visualize(map, visited, loop_x_counts, loop_y_counts, output_html):
+    with open(output_html, "w") as output:
+        output.write("<html><head><title>visualization</title></head>\n")
+        output.write("<body style=\"background-color:black; color:white\">\n")
+        output.write("<span style=\"font-family:monospace\">\n")
+        for i in range(0, len(map)):
+            for j in range(0, len(map[i])):
+                if (i, j) in visited:
+                    output.write("<span style=\"color:red; background-color:#220000;\">" + unicode_mapping[map[i][j]] + "</span>")
+                elif loop_x_counts[i][j] % 2 == 1 and loop_y_counts[i][j] % 2 == 1:
+                    output.write("<span style=\"color:yellow; background-color:#00AAAA;\">" + unicode_mapping[map[i][j]] + "</span>")
+                else:
+                    output.write(unicode_mapping[map[i][j]])
+            output.write("<br/>\n")
+        output.write("</span></body></html>\n")
+
+
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description='Solve the Advent of Code 2013 day 10 puzzle. (2)')
+    parser.add_argument("input", help="The input file")
+    parser.add_argument('--html', help="Output file for html visualization", default="")
     main()
 
