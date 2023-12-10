@@ -49,15 +49,14 @@ def main():
         for j in range(0, len(map[i])):
             if map[i][j] == "S":
                 start = (i, j)
-    visited = []
+    visited = set()
     queue = [(start, 0)]
     max_distance = 0
     while len(queue) > 0:
         node = queue.pop(0)
-        print(node)
         if node[0] in visited:
             continue
-        visited.append(node[0])
+        visited.add(node[0])
         if node[1] > max_distance:
             max_distance = node[1]
         pipe_type = map[node[0][0]][node[0][1]]
