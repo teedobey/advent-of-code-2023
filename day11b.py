@@ -1,6 +1,7 @@
 import fileinput
 import parse
 
+
 def main():
     sum = 0
     lines = iter(fileinput.input())
@@ -22,7 +23,7 @@ def main():
             for v in [p for p in vertexes if p[0] == i]:
                 new_vertexes.add((v[0] + acc_row, v[1]))
     vertexes = new_vertexes
-   
+
     new_vertexes = set()
     acc_col = 0
     for j in range(0, line_len):
@@ -31,15 +32,15 @@ def main():
         else:
             for v in [p for p in vertexes if p[1] == j]:
                 new_vertexes.add((v[0], v[1] + acc_col))
-    
-    print(F"acc_row: {acc_row}; acc_col: {acc_col}")
+
+    print(f"acc_row: {acc_row}; acc_col: {acc_col}")
     vertexes = new_vertexes
 
     total_distance = 0
     for v in vertexes:
         for v1 in vertexes:
             total_distance += abs(v[0] - v1[0]) + abs(v[1] - v1[1])
-                
+
     print(total_distance // 2)
 
 
