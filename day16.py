@@ -18,7 +18,7 @@ def main():
     q.append((0,0,E))
     while len(q) > 0:
         cur = q.pop()
-        print(F"{cur}")
+        #print(F"{cur}")
         visited.add(cur)
         next = evaluate(cur[0], cur[1], cur[2], map)
         q += [n for n in next if not n in visited]    
@@ -77,23 +77,15 @@ def direction(x, y, z, map):
     if z == N:
         if x > 0:
             return (x-1, y, z)
-        else:
-            return None
     if z == S:
         if x < len(map) - 1:
             return (x+1, y, z)
-        else:
-            return None
     if z == E:
         if y < len(map[x]) - 1:
             return (x, y+1, z)
-        else:
-            return None
     if z == W:
         if y > 0:
             return (x, y-1, z)
-        else:
-            return None
     return None
 
 if __name__ == "__main__":

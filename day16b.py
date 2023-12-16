@@ -85,23 +85,15 @@ def direction(x, y, z, map):
     if z == N:
         if x > 0:
             return (x-1, y, z)
-        else:
-            return None
     if z == S:
         if x < len(map) - 1:
             return (x+1, y, z)
-        else:
-            return None
     if z == E:
         if y < len(map[x]) - 1:
             return (x, y+1, z)
-        else:
-            return None
     if z == W:
         if y > 0:
             return (x, y-1, z)
-        else:
-            return None
     return None
 
 if __name__ == "__main__":
